@@ -9,35 +9,44 @@ onMounted(async () => {
 
   console.log(result, "loadTinyFaceDetectorModel");
 
-  const video = document.getElementById("face_video") as HTMLVideoElement;
+  const videoEl = document.getElementById("face_video") as HTMLVideoElement;
+
   const stream: any = await navigator.mediaDevices.getUserMedia({
     audio: false,
-    video: true,
+    video: {},
   });
   try {
-    video.srcObject = stream;
+    videoEl.srcObject = stream;
   } catch (error) {
-    video.src = window.URL.createObjectURL(stream);
+    videoEl.src = window.URL.createObjectURL(stream);
   }
 
-  video.onloadedmetadata = async () => {
-    // const detection = await faceapi.detectSingleFace(
-    //   video,
-    //   new faceapi.TinyFaceDetectorOptions()
-    // );
+  const onPlay = async () => {
+    console.log(videoEl.videoWidth, videoEl.videoHeight);
+
+    const detection = await faceapi.detectSingleFace(
+      videoEl,
+      new faceapi.TinyFaceDetectorOptions({
+        inputSize: 224,
+        scoreThreshold: 0.5,
+      })
+    );
+    console.log(detection);
+    // setTimeout(() => onPlay());
   };
+  videoEl.onloadedmetadata = onPlay;
 });
 </script>
 
 <template>
   <div class="app">
-    <video id="face_video" src="" autoplay controls></video>
+    <video id="face_video" src="" autoplay></video>
   </div>
 </template>
 
 <style scoped>
 #face_video {
-  width: 100%;
-  height: 200px;
+  width: 100vw;
+  height: 100vh;
 }
 </style>
