@@ -5,7 +5,6 @@ import { onMounted } from "vue";
 onMounted(async () => {
   console.log("mounted");
   const result = await faceapi.loadTinyFaceDetectorModel("/models");
-  console.log(faceapi);
 
   console.log(result, "loadTinyFaceDetectorModel");
 
@@ -13,7 +12,7 @@ onMounted(async () => {
 
   const stream: any = await navigator.mediaDevices.getUserMedia({
     audio: false,
-    video: {},
+    video: true,
   });
   try {
     videoEl.srcObject = stream;
@@ -48,5 +47,6 @@ onMounted(async () => {
 #face_video {
   width: 100vw;
   height: 100vh;
+  object-fit: fill;
 }
 </style>
